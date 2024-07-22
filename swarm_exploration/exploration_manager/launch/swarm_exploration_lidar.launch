@@ -8,7 +8,6 @@
   <!-- Global odom prefix -->
   <arg name="drone_num" value="2" />
   <arg name="drone_id" value="1" />
-  <!-- <arg name="odom_prefix" value="/vins_estimator_1/imu_propagate" /> -->
   <arg name="odom_prefix" value="/drone$(arg drone_id)/ekf_fuser/odom" />
 
 
@@ -36,11 +35,8 @@
     <!-- <arg name="simulation" value="true" /> -->
 
     <arg name="odometry_topic" value="$(arg odometry_topic)" />
-    <!-- <arg name="sensor_pose_topic" value="/vins_estimator_1/camera_pose" /> -->
     <arg name="sensor_pose_topic" value="/drone$(arg drone_id)/nav_sensor_pose" />
 
-    <!--这里没了fuel一样的cloudtopic,但是有预留这个接收话题-->
-    <!-- wzc do -->
     <!-- <arg name="cloud_topic" value="/laserMapping/cloud_registered"/>  -->
     <arg name="cloud_topic" value="none1"/> 
     <arg name="depth_topic" value="/drone1_camera/depth/image_rect_raw" />
@@ -49,6 +45,13 @@
     <arg name="fx" value="382.59014892578125"/>
     <arg name="fy" value="382.59014892578125"/>
   </include>
+
+    <node pkg="sensor_pose_trans" type="sensor_pose_trans_node" name="sensor_pose_trans_node$(arg drone_id)" output="log">
+    <param name="estimation_rate" value="30.0" />
+    <remap from="~odometry" to="$(arg odometry_topic)" /> 
+    <remap from="/nav_sensor_pose" to="/drone$(arg drone_id)/nav_sensor_pose"/>
+    
+  </node>
                                                                                                                                                                                                                                                                                       
   <node pkg="odom_visualization" name="odom_visualization_$(arg drone_id)" type="odom_visualization" output="screen">
       <remap from="~odom" to="$(arg odometry_topic)"/>
