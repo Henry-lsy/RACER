@@ -7,6 +7,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall")
 
 find_package(Eigen3 REQUIRED)
 find_package(PCL 1.7 REQUIRED)
+find_package(NLopt REQUIRED)
+set(NLopt_INCLUDE_DIRS ${NLOPT_INCLUDE_DIR})
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -16,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   plan_env
   active_perception
   cv_bridge
-  nlopt
+  #nlopt
 )
 
 catkin_package(
@@ -39,5 +41,7 @@ add_library( bspline_opt
     )
 target_link_libraries( bspline_opt
     ${catkin_LIBRARIES} 
+    ${NLOPT_LIBRARIES}
+    /usr/local/lib/libnlopt.so
     # /usr/local/lib/libnlopt.so
     )  
