@@ -76,7 +76,7 @@ void MapROS::init() {
   cloud_sub_.reset(
       new message_filters::Subscriber<sensor_msgs::PointCloud2>(node_, "/map_ros/cloud", 50));
   pose_sub_.reset(
-      new message_filters::Subscriber<geometry_msgs::PoseStamped>(node_, "/map_ros/pose", 25));
+      new message_filters::Subscriber<nav_msgs::Odometry>(node_, "/map_ros/pose", 25));
 
   sync_image_pose_.reset(new message_filters::Synchronizer<MapROS::SyncPolicyImagePose>(
       MapROS::SyncPolicyImagePose(100), *depth_sub_, *pose_sub_));
@@ -129,18 +129,18 @@ void MapROS::updateESDFCallback(const ros::TimerEvent& /*event*/) {
 }
 
 void MapROS::depthPoseCallback(
-    const sensor_msgs::ImageConstPtr& img, const geometry_msgs::PoseStampedConstPtr& pose) {
-  camera_pos_(0) = pose->pose.position.x;
-  camera_pos_(1) = pose->pose.position.y;
-  camera_pos_(2) = pose->pose.position.z;
+    const sensor_msgs::ImageConstPtr& img, const nav_msgs::OdometryConstPtr& pose) {
+  camera_pos_(0) =  pose->pose.pose.position.x;
+  camera_pos_(1) =  pose->pose.pose.position.y;
+  camera_pos_(2) =  pose->pose.pose.position.z;
   if (!map_->isInMap(camera_pos_))  // exceed mapped region
     return;
 
   // Simulate swarm communication
   map_->mm_->drone_pos_ = camera_pos_;
 
-  camera_q_ = Eigen::Quaterniond(pose->pose.orientation.w, pose->pose.orientation.x,
-      pose->pose.orientation.y, pose->pose.orientation.z);
+  camera_q_ = Eigen::Quaterniond(pose->pose.pose.orientation.w, pose->pose.pose.orientation.x,
+      pose->pose.pose.orientation.y, pose->pose.pose.orientation.z);
   cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(img, img->encoding);
   if (img->encoding == sensor_msgs::image_encodings::TYPE_32FC1)
     (cv_ptr->image).convertTo(cv_ptr->image, CV_16UC1, k_depth_scaling_factor_);
@@ -175,12 +175,12 @@ void MapROS::depthPoseCallback(
 }
 
 void MapROS::cloudPoseCallback(
-    const sensor_msgs::PointCloud2ConstPtr& msg, const geometry_msgs::PoseStampedConstPtr& pose) {
-  camera_pos_(0) = pose->pose.position.x;
-  camera_pos_(1) = pose->pose.position.y;
-  camera_pos_(2) = pose->pose.position.z;
-  camera_q_ = Eigen::Quaterniond(pose->pose.orientation.w, pose->pose.orientation.x,
-      pose->pose.orientation.y, pose->pose.orientation.z);
+    const sensor_msgs::PointCloud2ConstPtr& msg, const nav_msgs::OdometryConstPtr& pose) {
+  camera_pos_(0) =  pose->pose.pose.position.x;
+  camera_pos_(1) =  pose->pose.pose.position.y;
+  camera_pos_(2) =  pose->pose.pose.position.z;
+  camera_q_ = Eigen::Quaterniond(pose->pose.pose.orientation.w, pose->pose.pose.orientation.x,
+      pose->pose.pose.orientation.y, pose->pose.pose.orientation.z);
   pcl::PointCloud<pcl::PointXYZ> cloud;
   pcl::fromROSMsg(*msg, cloud);
   int num = cloud.points.size();
