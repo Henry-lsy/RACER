@@ -1,0 +1,65 @@
+<launch>
+  <!-- size of map, change the size in x, y, z according to your application -->
+  <arg name="map_size_x" value="100.0"/>
+  <arg name="map_size_y" value="100.0"/>
+  <arg name="map_size_z" value="5.0"/>
+
+
+  <!-- Global odom prefix -->
+  <arg name="drone_num" value="2" />
+  <arg name="drone_id" value="1" />
+  <!-- <arg name="odom_prefix" value="/vins_estimator_1/imu_propagate" /> -->
+  <arg name="odom_prefix" value="/drone$(arg drone_id)/ekf_fuser/odom" />
+
+
+  <arg name="init_x"   value="0"/>
+  <!-- <arg name="init_x"   value="-4.5"/> -->
+  <arg name="init_y"   value="0"/>
+  <!-- <arg name="init_y"   value="-3"/> -->
+  <arg name="init_z"   value="0"/> 
+  <arg name="odometry_topic" value="/drone$(arg drone_id)/ekf_fuser/odom" />  
+
+
+  <include file="$(find exploration_manager)/launch/single_drone_exploration_realworld.xml">
+    <arg name="drone_id" value="$(arg drone_id)"/>
+    <arg name="init_x"   value="$(arg init_x)"/>
+    <!-- <arg name="init_x"   value="-4.5"/> -->
+    <arg name="init_y"   value="$(arg init_y)"/>
+    <!-- <arg name="init_y"   value="-3"/> -->
+    <arg name="init_z"   value="$(arg init_z)"/> 
+    <arg name="map_size_x" value="$(arg map_size_x)"/>
+    <arg name="map_size_y" value="$(arg map_size_y)"/>
+    <arg name="map_size_z" value="$(arg map_size_z)"/>
+    <arg name="odom_prefix" value="$(arg odom_prefix)"/>
+    <arg name="drone_num" value="$(arg drone_num)"/>
+    <arg name="simulation" value="false" />
+    <!-- <arg name="simulation" value="true" /> -->
+
+    <arg name="odometry_topic" value="$(arg odometry_topic)" />
+    <!-- <arg name="sensor_pose_topic" value="/vins_estimator_1/camera_pose" /> -->
+    <arg name="sensor_pose_topic" value="/drone$(arg drone_id)/nav_sensor_pose" />
+
+    <!--这里没了fuel一样的cloudtopic,但是有预留这个接收话题-->
+    <!-- wzc do -->
+    <!-- <arg name="cloud_topic" value="/laserMapping/cloud_registered"/>  -->
+    <arg name="cloud_topic" value="none1"/> 
+    <arg name="depth_topic" value="/drone1_camera/depth/image_rect_raw" />
+    <arg name="cx" value="323.421142578125"/>
+    <arg name="cy" value="242.06617736816406"/>
+    <arg name="fx" value="382.59014892578125"/>
+    <arg name="fy" value="382.59014892578125"/>
+  </include>
+                                                                                                                                                                                                                                                                                      
+  <node pkg="odom_visualization" name="odom_visualization_$(arg drone_id)" type="odom_visualization" output="screen">
+      <remap from="~odom" to="$(arg odometry_topic)"/>
+      <param name="drone_id" value="$(arg drone_id)"/>    
+      <param name="drone_num" value="$(arg drone_num)"/>    
+      <param name="color/a" value="1.0"/>    
+      <param name="color/r" value="0.0"/>        
+      <param name="color/g" value="0.0"/>        
+      <param name="color/b" value="1.0"/>       
+      <param name="covariance_scale" value="100.0"/>       
+      <param name="robot_scale" value="1.0"/>
+  </node>
+
+</launch>
