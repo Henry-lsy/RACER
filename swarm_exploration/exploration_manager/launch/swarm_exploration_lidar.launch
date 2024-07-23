@@ -6,7 +6,7 @@
 
 
   <!-- Global odom prefix -->
-  <arg name="drone_num" value="2" />
+  <arg name="drone_num" value="1" />
   <arg name="drone_id" value="1" />
   <arg name="odom_prefix" value="/drone$(arg drone_id)/ekf_fuser/odom" />
 

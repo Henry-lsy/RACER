@@ -29,7 +29,8 @@
     <arg name="map_size_z" value="$(arg map_size_z)"/>
 
     <arg name="odometry_topic" default="$(arg odometry_topic)"/>
-    <arg name="sensor_pose_topic" value="$(arg sensor_pose_topic)"/> 
+    <!-- <arg name="sensor_pose_topic" value="$(arg sensor_pose_topic)"/>  -->
+    <arg name="sensor_pose_topic" value="/pcl_render_node/converted_sensor_pose_$(arg drone_id)"/> 
 
     <!-- sensor pose: transform of camera frame in the world frame -->
     <!-- depth topic: depth image, 640x480 by default -->

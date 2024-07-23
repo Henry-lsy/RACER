@@ -6,7 +6,9 @@
 
   <!-- Global odom prefix -->
   <arg name="odom_prefix" value="/state_ukf/odom" />
-  <arg name="drone_num" value="5" />
+  <arg name="drone_num" value="2" />
+
+  <node name="rvizvisualisation" pkg="rviz" type="rviz" output="log" args="-d $(find exploration_manager)/config/swarm.rviz" />
 
     <!-- Map generation -->
   <!-- <node pkg ="map_generator" name ="map_pub" type ="map_pub" output = "screen" args="$(find map_generator)/resource/office.pcd">    
@@ -27,7 +29,7 @@
     <arg name="simulation" default="true"/>
   </include>
 
-  <include file="$(find exploration_manager)/launch/single_drone_exploration.xml">
+  <!-- <include file="$(find exploration_manager)/launch/single_drone_exploration.xml">
     <arg name="drone_id" value="2"/>
     <arg name="init_x"   value="0"/>
     <arg name="init_y"   value="-1"/>
@@ -38,9 +40,9 @@
     <arg name="odom_prefix" value="$(arg odom_prefix)"/>
     <arg name="drone_num" value="$(arg drone_num)"/>
     <arg name="simulation" default="true"/>
-  </include>
+  </include> -->
 
-  <include file="$(find exploration_manager)/launch/single_drone_exploration.xml">
+  <!-- <include file="$(find exploration_manager)/launch/single_drone_exploration.xml">
     <arg name="drone_id" value="3"/>
     <arg name="init_x"   value="1"/>
     <arg name="init_y"   value="-1"/>
@@ -64,7 +66,7 @@
     <arg name="odom_prefix" value="$(arg odom_prefix)"/>
     <arg name="drone_num" value="$(arg drone_num)"/>
     <arg name="simulation" default="true"/>
-  </include>
+  </include> -->
 
   <!-- <include file="$(find exploration_manager)/launch/single_drone_exploration.xml">
     <arg name="drone_id" value="5"/>
